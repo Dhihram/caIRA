@@ -9,7 +9,7 @@ huebreaker(tree, metat, bootstrap_threshold, date_range, samearea)
 \arguments{
 \item{tree}{tree file}
 
-\item{metat}{metadata file}
+\item{metat}{metadata dataframe contains `label`, `location`, and `date`}
 
 \item{bootstrap_threshold}{bootstrap threshold}
 
