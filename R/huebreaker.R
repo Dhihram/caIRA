@@ -1,18 +1,15 @@
-# Hello, world!
-#
-# This is an example function named 'hello'
-# which prints 'Hello, world!'.
-#
-# You can learn more about package authoring with RStudio at:
-#
-#   http://r-pkgs.had.co.nz/
-#
-# Some useful keyboard shortcuts for package authoring:
-#
-#   Install Package:           'Ctrl + Shift + B'
-#   Check Package:             'Ctrl + Shift + E'
-#   Test Package:              'Ctrl + Shift + T'
-
+#' Collecting the Cluster Based Tree and Metadata
+#'
+#' @param tree tree file
+#' @param metat metadata dataframe contains `label`, `location`, and `date`
+#' @param bootstrap_threshold bootstrap threshold
+#' @param date_range date range of the tip (days)
+#' @param samearea same area or not
+#'
+#' @return a data frame containing the monophyletic groups that meet the criteria
+#' @export
+#'
+#' @examples huebreaker(tree, metat, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
 huebreaker <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
   bootstrap_threshold <- as.numeric(bootstrap_threshold)
   date_range <- as.numeric(date_range)
