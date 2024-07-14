@@ -2,11 +2,10 @@
 title: "Collecting the Cluster with huebreaker"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Collecting the Cluster with huebreaker}
+  %\VignetteIndexEntry{cluster_huebreaker}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
