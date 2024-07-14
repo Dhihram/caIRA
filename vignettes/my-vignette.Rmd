@@ -1,8 +1,8 @@
 ---
-title: "Collecting the Cluster Based Tree and Metadata with huebreaker"
+title: "Collecting the Cluster with huebreaker"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{my-vignette}
+  %\VignetteIndexEntry{Collecting the Cluster with huebreaker}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
