@@ -36,7 +36,7 @@ This package will utilize:
 
 the `bootstrap_treshold` is the minimum bootstrap value to be considered as a cluster. The `data_range` is the range of the days to be considered as a cluster. The `samearea` is the boolean value to consider the same area as a cluster.
 
-For the manual, you can see [here](<https://dhihram.github.io/huebreaker/)
+For the manual, you can see [here](https://dhihram.github.io/huebreaker/)
 
 ``` r
 res <- huebreaker(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
