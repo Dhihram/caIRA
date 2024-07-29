@@ -1,4 +1,4 @@
-# MyPackage 1.1.2
+# MyPackage 0.1.2
 
 ## New Features
 - Added `new_function()` to enhance performance.
