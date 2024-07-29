@@ -9,13 +9,13 @@ huebreaker(tree, metat, bootstrap_threshold, date_range, samearea)
 \arguments{
 \item{tree}{tree file}
 
-\item{metat}{metadata dataframe contains `label`, `location`, and `date`}
+\item{metat}{metadata dataframe contains \code{label}, \code{location}, and \code{date}}
 
-\item{bootstrap_threshold}{bootstrap threshold}
+\item{bootstrap_threshold}{Numeric, the bootstrap threshold}
 
-\item{date_range}{date range of the tip (days)}
+\item{date_range}{Numeric, date range of the tip (days)}
 
-\item{samearea}{same area or not}
+\item{samearea}{Logical, whether to consider only groups from the same area}
 }
 \value{
 a data frame containing the monophyletic groups that meet the criteria
@@ -24,5 +24,24 @@ a data frame containing the monophyletic groups that meet the criteria
 Collecting the Cluster Based Tree and Metadata
 }
 \examples{
+# Load necessary packages
+library(ape)
+library(dplyr)
+library(stringr)
+ # Generate a random tree with 20 tips
+tree <- rtree(n = 20)
+# Generate random bootstrap values for each node
+set.seed(666)
+bootstrap_values <- sample(50:100, size = tree$Nnode, replace = TRUE)
+tree$node.label <- bootstrap_values
+# Generate metadata
+set.seed(666)
+areas <- sample(c("Area1", "Area2", "Area3"), size = length(tree$tip.label), replace = TRUE)
+start_date <- as.Date("2020-01-01")
+end_date <- as.Date("2020-01-20")
+random_dates <- sample(seq(start_date, end_date, by = "day"), size = length(tree$tip.label), replace = TRUE)
+# Create a data frame with the metadata
+metadata <- data.frame(label = tree$tip.label, location = areas, date = random_dates)
+# Run the huebreaker function
 huebreaker(tree, metat, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
 }

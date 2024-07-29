@@ -1,15 +1,23 @@
 Package: huebreaker
 Type: Package
 Title: Collecting the Cluster Based Tree and Metadata
-Version: 0.1.0
+Version: 0.1.2
 Author: Dhihram Tenrisau, Stéphane Hué
 Maintainer: Dhihram Tenrisau <dhihram.tenrisau@gmail.com>
-Description: This package are used to find the cluster based tree and metadata. The cluster based tree is a tree that is built based on the cluster of the data. The metadata is the information of the data that is used to build the tree.
-License: LSHTM
+Description: This package is used to find the cluster-based tree and metadata. The cluster-based tree is built based on the clusters in the data. The metadata contains information about the data used to build the tree.
+License: file LICENSE
 Encoding: UTF-8
 LazyData: true
+Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
+Imports:
+    ape,
+    dplyr,
+    stringr
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    ggtree,
+    tidyverse,
+    treeio
 VignetteBuilder: knitr

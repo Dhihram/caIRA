@@ -2,18 +2,48 @@
 #'
 #' @param tree tree file
 #' @param metat metadata dataframe contains `label`, `location`, and `date`
-#' @param bootstrap_threshold bootstrap threshold
-#' @param date_range date range of the tip (days)
-#' @param samearea same area or not
+#' @param bootstrap_threshold Numeric, the bootstrap threshold
+#' @param date_range Numeric, date range of the tip (days)
+#' @param samearea Logical, whether to consider only groups from the same area
 #'
 #' @return a data frame containing the monophyletic groups that meet the criteria
 #' @export
 #'
-#' @examples huebreaker(tree, metat, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
+#' @importFrom ape getMRCA extract.clade
+#' @importFrom dplyr %>% rowwise mutate ungroup filter select inner_join arrange desc group_by slice bind_rows
+#' @importFrom stringr str_split
+#' @importFrom utils globalVariables
+#'
+#' @examples
+#' # Load necessary packages
+#' library(ape)
+#' library(dplyr)
+#' library(stringr)
+#'  # Generate a random tree with 20 tips
+#' tree <- rtree(n = 20)
+#' # Generate random bootstrap values for each node
+#' set.seed(666)
+#' bootstrap_values <- sample(50:100, size = tree$Nnode, replace = TRUE)
+#' tree$node.label <- bootstrap_values
+#' # Generate metadata
+#' set.seed(666)
+#' areas <- sample(c("Area1", "Area2", "Area3"), size = length(tree$tip.label), replace = TRUE)
+#' start_date <- as.Date("2020-01-01")
+#' end_date <- as.Date("2020-01-20")
+#' random_dates <- sample(seq(start_date, end_date, by = "day"), size = length(tree$tip.label), replace = TRUE)
+#' # Create a data frame with the metadata
+#' metadata <- data.frame(label = tree$tip.label, location = areas, date = random_dates)
+#' # Run the huebreaker function
+#' huebreaker(tree, metat, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
 huebreaker <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
   bootstrap_threshold <- as.numeric(bootstrap_threshold)
   date_range <- as.numeric(date_range)
   samearea <- as.logical(samearea)
+
+  # Check if the tree has bootstrap values
+  if (is.null(tree$node.label) || all(is.na(tree$node.label))) {
+    stop("The tree does not contain bootstrap values.")
+  }
 
   # Extract monophyletic groups
   groups <- list()
@@ -127,3 +157,6 @@ huebreaker <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
 
   return(final_df)
 }
+
+# Declare global variables to avoid R CMD check warnings
+utils::globalVariables(c("Tips", "TipList", "Areas", "AllSameArea", "Dates", "MaxDate", "MinDate", "Bootstrap", "Group", "ParentNode", "AreaName", "ID", "NumTips"))

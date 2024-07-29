@@ -35,11 +35,12 @@ devtools::install_github("Dhihram/huebreaker")
 This package needs the additional package `tidyverse`, `ape`, `treeio`, and `dplyr`
 
 ```{r, warning=FALSE, message=FALSE}
-library(huebreaker)
-library(tidyverse)
 library(ape)
 library(dplyr)
+library(ggtree)
+library(tidyverse)
 library(treeio)
+library(huebreaker)
 ```
 
 ### Data
