@@ -34,7 +34,7 @@
 #' # Create a data frame with the metadata
 #' metadata <- data.frame(label = tree$tip.label, location = areas, date = random_dates)
 #' # Run the huebreaker function
-#' huebreaker(tree, metat, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
+#' huebreaker(tree, metadata, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
 huebreaker <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
   bootstrap_threshold <- as.numeric(bootstrap_threshold)
   date_range <- as.numeric(date_range)

@@ -43,5 +43,5 @@ random_dates <- sample(seq(start_date, end_date, by = "day"), size = length(tree
 # Create a data frame with the metadata
 metadata <- data.frame(label = tree$tip.label, location = areas, date = random_dates)
 # Run the huebreaker function
-huebreaker(tree, metat, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
+huebreaker(tree, metadata, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
 }
