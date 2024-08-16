@@ -1,10 +1,10 @@
-# Collecting the Cluster Based Tree and Metadata with huebreaker
+# Collecting and Identification the Outbreak Cluster
 
 <!-- badges: start -->
 
 <!-- badges: end -->
 
-The goal of `huebreaker` is to find the cluster based tree and metadata of the data. The package is based on the paper:
+The goal of Collecting and Identification the Outbreak Cluster `caIRA` is to find the cluster based tree and metadata of the data. The package is based on the paper:
 
 Ragonnet-Cronin, M., Hodcroft, E., Hué, S. et al. Automated analysis of phylogenetic clusters. BMC Bioinformatics 14, 317 (2013). <https://doi.org/10.1186/1471-2105-14-317>
 
@@ -20,17 +20,16 @@ devtools::install_github("Dhihram/huebreaker")
 his package needs the additional package `tidyverse`, `ape`, `treeio`, and `dplyr`
 
 ``` r
-library(huebreaker)
 library(tidyverse)
 library(ape)
 library(dplyr)
-library(ggtree)
 library(treeio)
+library(caIRA)
 ```
 
 You need the 2 data in this file, the first data is tree files (newick or nexus) and metadata file. The metadata file consists of `label`, `location`, and `date` columns. The `label` column must be same with the label in tree file.
 
-This package will utilize:
+This package with `genclus` will utilize:
 1. Finding and clustering the monophylectic groups in the tree
 2. Add the parameter of the clusters: `bootstrap_treshold`, `data_range`, and `samearea`
 3. Keep the maximum monophylectic groups in the cluster identify
@@ -38,6 +37,6 @@ This package will utilize:
 the `bootstrap_treshold` is the minimum bootstrap value to be considered as a cluster. The `data_range` is the range of the days to be considered as a cluster. The `samearea` is the boolean value to consider the same area as a cluster.
 
 ``` r
-res <- huebreaker(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
+res <- genclus(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
 ```
-For the manual, you can see [here](https://dhihram.github.io/huebreaker/)
+For the manual, you can see [here](https://dhihram.github.io/caIRA/)
