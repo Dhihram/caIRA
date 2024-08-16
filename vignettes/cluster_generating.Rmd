@@ -17,7 +17,7 @@ The goal of caIRA is to find the cluster based tree and metadata of the data.
 
 ## Installation
 
-You can install the development version of caIRA from [GitHub](https://github.com/) with:
+You can install the development version of `caIRA` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
@@ -68,7 +68,7 @@ gg
 
 ### Package Utilization
 
-This package will utilize:
+This part of package `genclus` will utilize:
 1. Finding and clustering the monophylectic groups in the tree
 2. Add the parameter of the clusters: `bootstrap_treshold`, `data_range`, and `samearea`
 3. Keep the maximum monophylectic groups in the cluster identify

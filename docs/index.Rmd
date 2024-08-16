@@ -81,9 +81,15 @@ gg
 
 ### Package Utilization
 
-This package will utilize: 1. Finding and clustering the monophylectic groups in the tree 2. Add the parameter of the clusters: `bootstrap_treshold`, `data_range`, and `samearea` 3. Keep the maximum monophylectic groups in the cluster identify
+This part of package, `genclus` will utilize:
 
-the `bootstrap_treshold` is the minimum bootstrap value to be considered as a cluster. The `data_range` is the range of the days to be considered as a cluster. The `samearea` is the boolean value to consider the same area as a cluster.
+1.  Finding and clustering the monophylectic groups in the tree
+
+2.  Add the parameter of the clusters: `bootstrap_treshold`, `data_range`, and `samearea`
+
+3.  Keep the maximum monophylectic groups in the cluster identify
+
+The `bootstrap_treshold` is the minimum bootstrap value to be considered as a cluster. The `data_range` is the range of the days to be considered as a cluster. The `samearea` is the boolean value to consider the same area as a cluster.
 
 ```{r}
 res <- genclus(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
