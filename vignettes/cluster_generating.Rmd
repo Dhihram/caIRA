@@ -1,8 +1,8 @@
 ---
-title: "Collecting the Cluster with huebreaker"
+title: "cluster_generating"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{cluster_huebreaker}
+  %\VignetteIndexEntry{cluster_generating}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -13,21 +13,15 @@ knitr::opts_chunk$set(
 )
 ```
 
-The goal of huebreaker is to find the cluster based tree and metadata of the data. The package is based on the paper:
-
-Ragonnet-Cronin, M., Hodcroft, E., Hué, S. et al. Automated analysis of phylogenetic clusters. BMC Bioinformatics 14, 317 (2013). <https://doi.org/10.1186/1471-2105-14-317>
-
-Hall M, Woolhouse M, Rambaut A (2015) Epidemic Reconstruction in a Phylogenetics Framework: Transmission Trees as Partitions of the Node Set. PLoS Comput Biol 11(12): e1004613. <https://doi.org/10.1371/journal.pcbi.1004613>
-
-This package is the part of Dhihram Tenrisau, MSc Health Data Science summer project, 'Phylodynamic of Norovirus in UK 2003-2023'. The project is supervised by Stéphane Hué
+The goal of caIRA is to find the cluster based tree and metadata of the data. 
 
 ## Installation
 
-You can install the development version of huebreaker from [GitHub](https://github.com/) with:
+You can install the development version of caIRA from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("Dhihram/huebreaker")
+devtools::install_github("Dhihram/caIRA")
 ```
 
 ## Example
@@ -35,12 +29,11 @@ devtools::install_github("Dhihram/huebreaker")
 This package needs the additional package `tidyverse`, `ape`, `treeio`, and `dplyr`
 
 ```{r, warning=FALSE, message=FALSE}
+library(tidyverse)
 library(ape)
 library(dplyr)
-library(ggtree)
-library(tidyverse)
 library(treeio)
-library(huebreaker)
+library(caIRA)
 ```
 
 ### Data
@@ -83,7 +76,7 @@ This package will utilize:
 the `bootstrap_treshold` is the minimum bootstrap value to be considered as a cluster. The `data_range` is the range of the days to be considered as a cluster. The `samearea` is the boolean value to consider the same area as a cluster.
 
 ```{r}
-res <- huebreaker(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
+res <- genclus(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
 knitr::kable(res)
 ```
 

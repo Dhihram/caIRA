@@ -1,8 +1,8 @@
 ---
-title: "Collecting the Cluster with huebreaker"
+title: "Collecting and Identification the Outbreak Cluster"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Collecting the Cluster with huebreaker}
+  %\VignetteIndexEntry{Collecting and Identification the Outbreak Cluster}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -14,13 +14,19 @@ knitr::opts_chunk$set(
 )
 ```
 
-The goal of huebreaker is to find the cluster based tree and metadata of the data. The package is based on the paper:
+The goal of Collecting and Identification the Outbreak Cluster (caIRA) is to find the cluster based tree and metadata of the data. The package is based on the paper:
 
 Ragonnet-Cronin, M., Hodcroft, E., Hué, S. et al. Automated analysis of phylogenetic clusters. BMC Bioinformatics 14, 317 (2013). <https://doi.org/10.1186/1471-2105-14-317>
 
 Hall M, Woolhouse M, Rambaut A (2015) Epidemic Reconstruction in a Phylogenetics Framework: Transmission Trees as Partitions of the Node Set. PLoS Comput Biol 11(12): e1004613. <https://doi.org/10.1371/journal.pcbi.1004613>
 
-This package is the part of Dhihram Tenrisau, MSc Health Data Science summer project, 'Phylodynamic of Norovirus in UK 2003-2023'. The project is supervised by Stéphane Hué
+This package is the part of Dhihram Tenrisau, MSc Health Data Science summer project, 'Phylodynamic of Norovirus in UK 2003-2023'. The project is supervised by Stéphane Hué.
+
+By using this package, the hope will be emerging (not the the disease emerging) like the lyrics of the song 'Ah Ça Ira':
+
+*Ah ça ira, réjouis-toi!* (It'll be fine, rejoice!)
+
+*Ah ça ira, le bon temps viendra* (It'll be fine, good times will come)
 
 ## Installation
 
@@ -28,7 +34,7 @@ You can install the development version of huebreaker from [GitHub](https://gith
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("Dhihram/huebreaker")
+devtools::install_github("Dhihram/caIRA")
 ```
 
 ## Example
@@ -36,11 +42,11 @@ devtools::install_github("Dhihram/huebreaker")
 This package needs the additional package `tidyverse`, `ape`, `treeio`, and `dplyr`
 
 ```{r, warning=FALSE, message=FALSE}
-library(huebreaker)
 library(tidyverse)
 library(ape)
 library(dplyr)
 library(treeio)
+library(caIRA)
 ```
 
 ### Data
@@ -75,15 +81,12 @@ gg
 
 ### Package Utilization
 
-This package will utilize:
-1. Finding and clustering the monophylectic groups in the tree
-2. Add the parameter of the clusters: `bootstrap_treshold`, `data_range`, and `samearea`
-3. Keep the maximum monophylectic groups in the cluster identify
+This package will utilize: 1. Finding and clustering the monophylectic groups in the tree 2. Add the parameter of the clusters: `bootstrap_treshold`, `data_range`, and `samearea` 3. Keep the maximum monophylectic groups in the cluster identify
 
 the `bootstrap_treshold` is the minimum bootstrap value to be considered as a cluster. The `data_range` is the range of the days to be considered as a cluster. The `samearea` is the boolean value to consider the same area as a cluster.
 
 ```{r}
-res <- huebreaker(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
+res <- genclus(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
 knitr::kable(res)
 ```
 

@@ -1,25 +1,28 @@
 #' Collecting the Cluster Based Tree and Metadata
 #'
-#' @param tree tree file
-#' @param metat metadata dataframe contains `label`, `location`, and `date`
-#' @param bootstrap_threshold Numeric, the bootstrap threshold
-#' @param date_range Numeric, date range of the tip (days)
-#' @param samearea Logical, whether to consider only groups from the same area
+#' This function identifies monophyletic groups within a phylogenetic tree based on provided criteria, such as bootstrap threshold, date range, and geographic location.
 #'
-#' @return a data frame containing the monophyletic groups that meet the criteria
+#' @param tree A phylogenetic tree object (likely of class `phylo` from the `ape` package).
+#' @param metat A metadata dataframe containing at least the columns `label`, `location`, and `date`.
+#' @param bootstrap_threshold Numeric value specifying the minimum bootstrap support required for a clade to be considered.
+#' @param date_range Numeric value specifying the range of dates (in days) within which tips must fall to be considered as part of the same group.
+#' @param samearea Logical flag indicating whether only groups from the same geographic area should be considered.
+#'
+#' @return A dataframe containing the monophyletic groups that meet the specified criteria.
 #' @export
-#'
 #' @importFrom ape getMRCA extract.clade
-#' @importFrom dplyr %>% rowwise mutate ungroup filter select inner_join arrange desc group_by slice bind_rows
+#' @importFrom dplyr %>% filter select mutate rowwise ungroup inner_join arrange desc group_by slice bind_rows
 #' @importFrom stringr str_split
-#' @importFrom utils globalVariables
+#' @importFrom progress progress_bar
 #'
 #' @examples
 #' # Load necessary packages
 #' library(ape)
 #' library(dplyr)
 #' library(stringr)
-#'  # Generate a random tree with 20 tips
+#' library(progress)
+#'
+#' # Generate a random tree with 20 tips
 #' tree <- rtree(n = 20)
 #' # Generate random bootstrap values for each node
 #' set.seed(666)
@@ -33,9 +36,10 @@
 #' random_dates <- sample(seq(start_date, end_date, by = "day"), size = length(tree$tip.label), replace = TRUE)
 #' # Create a data frame with the metadata
 #' metadata <- data.frame(label = tree$tip.label, location = areas, date = random_dates)
-#' # Run the huebreaker function
-#' huebreaker(tree, metadata, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
-huebreaker <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
+#' # Run the genclus function
+#' genclus(tree, metadata, bootstrap_threshold = 90, date_range = 30, samearea = TRUE)
+genclus <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
+
   bootstrap_threshold <- as.numeric(bootstrap_threshold)
   date_range <- as.numeric(date_range)
   samearea <- as.logical(samearea)
@@ -45,22 +49,56 @@ huebreaker <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
     stop("The tree does not contain bootstrap values.")
   }
 
-  # Extract monophyletic groups
-  groups <- list()
+  # Identify the root node (usually it's the first node after the tips)
+  root_node <- length(tree$tip.label) + 1
+
+  # Calculate the total number of iterations for progress tracking
   tip_count <- length(tree$tip.label)
+  total_iterations <- (tip_count * (tip_count - 1)) / 2
+
+  # Set up the progress bar
+  pb <- progress_bar$new(
+    format = "(:spin) [:bar] :percent [Elapsed time: :elapsedfull || Estimated time remaining: :eta]",
+    total = total_iterations,
+    complete = "=",   # Completion bar character
+    incomplete = "-", # Incomplete bar character
+    current = ">",    # Current bar character
+    clear = FALSE,    # If TRUE, clears the bar when finish
+    width = 100       # Width of the progress bar
+  )
+
+  # Extract monophyletic groups with bootstrap value filtering first
+  groups <- list()
+
   for (i in 1:(tip_count - 1)) {
     for (j in (i + 1):tip_count) {
+      # Update progress
+      pb$tick()
+
       common_ancestor <- getMRCA(tree, c(tree$tip.label[i], tree$tip.label[j]))
-      clade <- extract.clade(tree, common_ancestor)
-      if (!is.null(clade) && all(clade$tip.label %in% tree$tip.label)) {
-        group <- sort(clade$tip.label)
-        group_name <- paste(group, collapse = ", ")
-        if (!group_name %in% names(groups)) {
-          groups[[group_name]] <- list(
-            tips = group,
-            bootstrap_value = tree$node.label[common_ancestor - length(tree$tip.label)],
-            parent_node = common_ancestor
-          )
+
+      # Determine bootstrap value, set to NA if the node is the root
+      if (common_ancestor == root_node) {
+        bootstrap_value <- NA
+      } else {
+        bootstrap_value <- tree$node.label[common_ancestor - length(tree$tip.label)]
+      }
+
+      # Proceed only if the bootstrap value is NA (root) or meets the threshold
+      if (is.na(bootstrap_value) || bootstrap_value >= bootstrap_threshold) {
+        clade <- extract.clade(tree, common_ancestor)
+
+        if (!is.null(clade) && all(clade$tip.label %in% tree$tip.label)) {
+          group <- sort(clade$tip.label)
+          group_name <- paste(group, collapse = ", ")
+
+          if (!group_name %in% names(groups)) {
+            groups[[group_name]] <- list(
+              tips = group,
+              bootstrap_value = bootstrap_value,
+              parent_node = common_ancestor
+            )
+          }
         }
       }
     }
@@ -99,18 +137,18 @@ huebreaker <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
     ) %>%
     ungroup()
 
-  # Convert Bootstrap to numeric
+  # Convert Bootstrap to numeric (though already filtered above, it's good to ensure this)
   monophyletic_df <- monophyletic_df %>%
     mutate(Bootstrap = as.numeric(Bootstrap))
 
-  # Filter the DataFrame based on bootstrap values, same area if required, and date range within given days
+  # Filter the DataFrame based on the same area if required and date range within given days
   if (samearea) {
     filtered_df <- monophyletic_df %>%
-      filter(Bootstrap >= bootstrap_threshold, AllSameArea == TRUE, diff <= date_range) %>%
+      filter(AllSameArea == TRUE, diff <= date_range) %>%
       select(Group, Tips, Bootstrap, ParentNode, AreaName, MinDate, MaxDate, diff)
   } else {
     filtered_df <- monophyletic_df %>%
-      filter(Bootstrap >= bootstrap_threshold, diff <= date_range) %>%
+      filter(diff <= date_range) %>%
       select(Group, Tips, Bootstrap, ParentNode, AreaName, MinDate, MaxDate, diff)
   }
 
@@ -160,3 +198,4 @@ huebreaker <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
 
 # Declare global variables to avoid R CMD check warnings
 utils::globalVariables(c("Tips", "TipList", "Areas", "AllSameArea", "Dates", "MaxDate", "MinDate", "Bootstrap", "Group", "ParentNode", "AreaName", "ID", "NumTips"))
+
