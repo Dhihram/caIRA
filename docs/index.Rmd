@@ -106,3 +106,35 @@ for (node in res$ParentNode) {
 }
 gg_clus
 ```
+
+## Generating from BEAST tree
+
+Since BEAST tree has different structure of the tree, we developed `beastclus`. In BEAST tree, the bootstrapping value is posterior probability with scale 0-1. The beast tree is exported using `read.beast` from `treeio` In this example, I will use the Monkeypox phylogenetic tree and metadata from GISAID:
+
+```{r}
+#beast tree
+
+beast_tree <- read.beast('https://raw.githubusercontent.com/Dhihram/caIRA/refs/heads/master/inst/extdata/pox_strict_comb.tree')
+
+#metadata
+metadata<-read.csv('https://raw.githubusercontent.com/Dhihram/caIRA/refs/heads/master/inst/extdata/metadata_samp.csv')
+
+```
+
+Generating cluster
+
+```{r}
+res2 <- beastclus(beast_tree, metadata, post_threshold = 0.50, date_range = 90, samearea = TRUE)
+knitr::kable(res2)
+```
+
+Also, we can check the clusters in tree
+
+```{r}
+tr <- ggtree(beast_tree, mrsd = min(metadata$date)) +
+  theme_tree2() 
+# Replace `highlight_nodes` with the node numbers or clade labels you want to highlight
+n <- as.numeric(res2$ParentNode)
+tr + 
+  geom_highlight(node = n, fill = "lightblue", alpha = 0.5)
+```
