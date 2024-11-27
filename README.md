@@ -14,7 +14,7 @@ This package is the part of Dhihram Tenrisau, MSc Health Data Science summer pro
 
 ``` r
 # install.packages("devtools")
-devtools::install_github("Dhihram/huebreaker")
+devtools::install_github("Dhihram/caIRA")
 ```
 
 his package needs the additional package `tidyverse`, `ape`, `treeio`, and `dplyr`
