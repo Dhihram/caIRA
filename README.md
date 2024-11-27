@@ -39,4 +39,14 @@ the `bootstrap_treshold` is the minimum bootstrap value to be considered as a cl
 ``` r
 res <- genclus(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
 ```
+
+``` r
+res <- genclus(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
+```
+This package also has the function `beastclus` to find the cluster based on the BEAST tree. The function will utilize the `genclus` function with the additional parameter of `post_threshold` to find the cluster based on the posterior probability.
+
+``` r
+res <- beastclus(beast_tree, metadata, post_threshold = 0.50, date_range = 90, samearea = TRUE)
+```
+
 For the manual, you can see [here](https://dhihram.github.io/caIRA/)
