@@ -40,9 +40,6 @@ the `bootstrap_treshold` is the minimum bootstrap value to be considered as a cl
 res <- genclus(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
 ```
 
-``` r
-res <- genclus(tree, metat, bootstrap_threshold = 80, date_range = 30, samearea = TRUE)
-```
 This package also has the function `beastclus` to find the cluster based on the BEAST tree. The function will utilize the `genclus` function with the additional parameter of `post_threshold` to find the cluster based on the posterior probability.
 
 ``` r
