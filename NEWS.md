@@ -1,10 +1,10 @@
 # caIRA 1.1.1
 
 ## New Features
-- Change name package to caIRA.
+- Added `beastclus()` for BEAST tree
 
 ## Improvements
-- Added `beastclus()` for BEAST tree
+- Added beast tree data and metadata form example
 
 # caIRA 0.1.3
 
