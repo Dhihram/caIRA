@@ -70,28 +70,32 @@ genclus <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
   # Extract monophyletic groups with bootstrap value filtering first
   groups <- list()
 
+  # Extract monophyletic groups with bootstrap value filtering first
+  groups <- list()
+  
   for (i in 1:(tip_count - 1)) {
     for (j in (i + 1):tip_count) {
       # Update progress
       pb$tick()
-
+      
       common_ancestor <- getMRCA(tree, c(tree$tip.label[i], tree$tip.label[j]))
-
+      
       # Determine bootstrap value, set to NA if the node is the root
       if (common_ancestor == root_node) {
         bootstrap_value <- NA
       } else {
-        bootstrap_value <- tree$node.label[common_ancestor - length(tree$tip.label)]
+        # Safely convert character labels to numeric
+        bootstrap_value <- as.numeric(tree$node.label[common_ancestor - length(tree$tip.label)])
       }
-
-      # Proceed only if the bootstrap value is NA (root) or meets the threshold
-      if (is.na(bootstrap_value) || bootstrap_value >= bootstrap_threshold) {
+      
+      # Checks: is it NOT NA? And is it >= threshold?
+      if (!is.na(bootstrap_value) && bootstrap_value >= bootstrap_threshold) {
         clade <- extract.clade(tree, common_ancestor)
-
+        
         if (!is.null(clade) && all(clade$tip.label %in% tree$tip.label)) {
           group <- sort(clade$tip.label)
           group_name <- paste(group, collapse = ", ")
-
+          
           if (!group_name %in% names(groups)) {
             groups[[group_name]] <- list(
               tips = group,
@@ -100,9 +104,9 @@ genclus <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
             )
           }
         }
-      }
+      } 
     }
-  }
+  } 
 
   # Convert groups to data frame
   monophyletic_df <- do.call(rbind, lapply(names(groups), function(name) {
@@ -145,11 +149,11 @@ genclus <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
   if (samearea) {
     filtered_df <- monophyletic_df %>%
       filter(AllSameArea == TRUE, diff <= date_range) %>%
-      select(Group, Tips, Bootstrap, ParentNode, AreaName, MinDate, MaxDate, diff)
+      dplyr::select(Group, Tips, Bootstrap, ParentNode, AreaName, MinDate, MaxDate, diff)
   } else {
     filtered_df <- monophyletic_df %>%
       filter(diff <= date_range) %>%
-      select(Group, Tips, Bootstrap, ParentNode, AreaName, MinDate, MaxDate, diff)
+      dplyr::select(Group, Tips, Bootstrap, ParentNode, AreaName, MinDate, MaxDate, diff)
   }
 
   # Add the column to count the number of tips
@@ -180,7 +184,7 @@ genclus <- function(tree, metat, bootstrap_threshold, date_range, samearea) {
       group_by(ID) %>%
       slice(1) %>%
       ungroup() %>%
-      select(Group)
+      dplyr::select(Group)
 
     # Create a set of groups to keep based on the ID filtering
     groups_to_keep <- unique(id_df$Group)
